@@ -126,7 +126,7 @@ Save the history of score changes.
     }
   ]
   ```
-- PUT: {ENDPOINT}/api/v1/scores
+- PUT: {ENDPOINT}/api/v1/scores\
   **Headers**
   ```
   Authorization: access_token
