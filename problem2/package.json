@@ -1,0 +1,48 @@
+{
+  "name": "task-2",
+  "version": "1.0.0",
+  "description": "",
+  "type": "commonjs",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "cross-env BUILD_MODE=dev nodemon --exec ts-node -r tsconfig-paths/register src/index.ts",
+    "lint": "eslint src --ext ts --report-unused-disable-directives --max-warnings 0",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc",
+    "production": "npm run build && cross-env BUILD_MODE=production node ./dist/index.js",
+    "typeorm": "node -r ts-node/register -r tsconfig-paths/register node_modules/typeorm/cli.js",
+    "migration:generate": "yarn typeorm migration:generate -d src/config/data-source.ts",
+    "migration:run": "yarn typeorm migration:run -d src/config/data-source.ts",
+    "migration:revert": "yarn typeorm migration:revert -d src/config/data-source.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "http-status-codes": "^2.3.0",
+    "joi": "^17.10.2",
+    "nanoid": "3",
+    "pg": "^8.13.3",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.3.17"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/joi": "^17.2.3",
+    "@types/node": "^22.13.5",
+    "eslint": "^9.21.0",
+    "globals": "^16.0.0",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.25.0"
+  }
+}
