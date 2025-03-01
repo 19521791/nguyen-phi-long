@@ -1,7 +1,18 @@
-import { Book } from "@entities/book.entity";
 import { Pagination } from "@utils/paginable";
 
+export interface BookResponse {
+  id: string,
+  title: string,
+  author: string,
+  description: string,
+  price: number,
+  rating: number,
+  stock: boolean,
+  thumbnail: string,
+  created_at: string
+}
+
 export interface PaginatedBooks {
-  records: Book[];
+  records: BookResponse[];
   pagination: Pagination;
 }

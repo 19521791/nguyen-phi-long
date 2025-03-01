@@ -1,14 +1,25 @@
 import { AppDataSource } from "@config/data-source";
 import { Book } from "@entities/book.entity";
 import { Pagination } from "@utils/paginable";
-import { PaginatedBooks } from "@interfaces/book.interface";
+import { BookResponse, PaginatedBooks } from "@interfaces/book.interface";
 
 export class BookService {
   private bookRepository = AppDataSource.getRepository(Book);
 
-  async createBook(data: Partial<Book>): Promise<Book> {
+  async createBook(data: Partial<Book>): Promise<BookResponse> {
     const book = this.bookRepository.create(data);
-    return await this.bookRepository.save(book);
+    await this.bookRepository.save(book);
+    return {
+      id: book.id,
+      title: book.title,
+      author: book.author,
+      description: book.description || "",
+      price: book.price,
+      rating: book.rating ?? 0,
+      stock: book.stock ?? false,
+      thumbnail: book.thumbnail || "",
+      created_at: book.created_at.toISOString()
+    }
   }
 
   async getAllBooks(
@@ -62,21 +73,56 @@ export class BookService {
     const [books, totalCount] = await queryBuilder.getManyAndCount();
 
     return {
-      records: books,
+      records: books.map(book => ({
+        id: book.id,
+        title: book.title,
+        author: book.author,
+        description: book.description || "",
+        price: book.price,
+        rating: book.rating ?? 0,
+        stock: book.stock ?? false,
+        thumbnail: book.thumbnail || "",
+        created_at: book.created_at.toISOString(),
+      })),
       pagination: Pagination(page, perPage, totalCount)
     }
   }
 
-  async getBookById(id: string): Promise<Book | null> {
-    return await this.bookRepository.findOne({ where: { id } });
+  async getBookById(id: string): Promise<BookResponse | null> {
+    const book = await this.bookRepository.findOne({ where: { id } });
+
+    if (!book) return null;
+
+    return {
+      id: book.id,
+      title: book.title,
+      author: book.author,
+      description: book.description || "",
+      price: book.price,
+      rating: book.rating ?? 0,
+      stock: book.stock ?? false,
+      thumbnail: book.thumbnail || "",
+      created_at: book.created_at.toISOString()
+    };
   }
 
-  async updateBook(id: string, data: Partial<Book>): Promise<Book | null> {
+  async updateBook(id: string, data: Partial<Book>): Promise<BookResponse | null> {
     const book = await this.bookRepository.findOne({ where: { id } });
     if (!book) return null;
     
     Object.assign(book, data);
-    return await this.bookRepository.save(book);
+    await this.bookRepository.save(book);
+    return {
+      id: book.id,
+      title: book.title,
+      author: book.author,
+      description: book.description || "",
+      price: book.price,
+      rating: book.rating ?? 0,
+      stock: book.stock ?? false,
+      thumbnail: book.thumbnail || "",
+      created_at: book.created_at.toISOString()
+    };
   }
 
   async deleteBook(id: string): Promise<boolean> {
